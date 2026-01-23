@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;500&family=Sora:wght@300;500&display=swap"
+        rel="stylesheet">
+
+</head>
+
+<body>
+    <nav>
+        <button type="button" id="toggle-theme" aria-label="Тёмная тема">🌙</button>
+        <button type="button" id="open-help" aria-haspopup="dialog" aria-controls="help-modal">?</button>
+        <button type="button" id="open-trash">Корзина</button>
+    </nav>
+
+    <section id="main-view">
+        <table id="fridge-table">
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Срок годности</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <form id="fridge-form">
+            <label>
+                Название
+                <input type="text" id="name-input" required>
+            </label>
+            <label>
+                Срок годности
+                <input type="date" id="expiry-input" required>
+            </label>
+            <button type="submit">Добавить</button>
+            <button type="button" id="cancel-edit" hidden>Отменить</button>
+        </form>
+
+        <section id="voice-controls">
+            <div class="record-actions">
+                <button type="button" id="start-record">Запись</button>
+                <button type="button" id="stop-record" disabled>Стоп</button>
+            </div>
+        </section>
+    </section>
+
+    <div id="trash-modal" role="dialog" aria-modal="true" hidden>
+        <div class="trash-content">
+            <div class="trash-header">
+                <h2>Корзина</h2>
+                <button type="button" id="close-trash">Закрыть</button>
+            </div>
+            <table id="trash-table">
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Срок годности</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="help-modal" role="dialog" aria-modal="true" hidden>
+        <div class="help-content">
+            <h2>Как пользоваться</h2>
+            <ol>
+                <li>Добавьте продукт: введите название и дату, нажмите “Добавить”.</li>
+                <li>Редактируйте запись через кнопку с карандашом, удаляйте через корзину.</li>
+                <li>Удаленные записи попадают в “Корзину” и могут быть восстановлены.</li>
+                <li>Запись голосом: нажмите “Запись”, продиктуйте фразу, нажмите “Стоп”.</li>
+                <li>Поддерживаемые фразы: “X до ДАТА”, “X годен до ДАТА”, “X истекает ДАТА”, “X через N дней”.</li>
+                <li>Даты принимаются в формате 01.02.2026 или “третьего января”.</li>
+            </ol>
+            <button type="button" id="close-help">Закрыть</button>
+        </div>
+    </div>
+
+    <div id="toast" role="status" aria-live="polite" hidden>Добавлено</div>
+
+    <script src="scripts.js"></script>
+</body>
+
+</html>
