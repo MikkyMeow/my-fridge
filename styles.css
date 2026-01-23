@@ -50,7 +50,8 @@ nav {
     gap: var(--space);
     justify-content: space-between;
     max-width: 980px;
-    margin-bottom: 12px;
+    margin: 0 auto 12px;
+    padding: 0 8px;
 }
 
 #toggle-theme {
