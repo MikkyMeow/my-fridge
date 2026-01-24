@@ -6,15 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="styles.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;500&family=Sora:wght@300;500&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;500&family=Sora:wght@300;500&display=swap"
         rel="stylesheet">
 
 </head>
 
 <body>
     <nav>
-        <button type="button" id="toggle-theme" aria-label="Тёмная тема">🌙</button>
+        <button type="button" id="toggle-theme" aria-label="Тёмная тема">&#127769;</button>
         <button type="button" id="open-help" aria-haspopup="dialog" aria-controls="help-modal">?</button>
         <button type="button" id="open-trash">Корзина</button>
     </nav>
@@ -46,8 +45,7 @@
 
         <section id="voice-controls">
             <div class="record-actions">
-                <button type="button" id="start-record">Запись</button>
-                <button type="button" id="stop-record" disabled>Стоп</button>
+                <button type="button" id="start-record" class="mic-button" aria-label="Запись">&#127908;</button>
             </div>
         </section>
     </section>
@@ -79,10 +77,40 @@
                 <li>Редактируйте запись через кнопку с карандашом, удаляйте через корзину.</li>
                 <li>Удаленные записи попадают в “Корзину” и могут быть восстановлены.</li>
                 <li>Запись голосом: нажмите “Запись”, продиктуйте фразу, нажмите “Стоп”.</li>
-                <li>Поддерживаемые фразы: “X до ДАТА”, “X годен до ДАТА”, “X истекает ДАТА”, “X через N дней”.</li>
+                <li>
+                    Поддерживаемые фразы:
+                    <span class="help-patterns">
+                        <span>“X до ДАТА”</span>
+                        <span>“X годен до ДАТА”</span>
+                        <span>“X истекает ДАТА”</span>
+                        <span>“X через N дней”</span>
+                    </span>
+                </li>
                 <li>Даты принимаются в формате 01.02.2026 или “третьего января”.</li>
+                <li>
+                    По всем вопросам обращаться на
+                    <a href="mailto:arturakk2015@gmail.com">почту</a>
+                    или в
+                    <a href="https://t.me/artur_mikimey" target="_blank" rel="noreferrer">телеграм</a>
+                </li>
             </ol>
+            <label class="help-checkbox">
+                <input type="checkbox" id="hide-help">
+                Больше не показывать
+            </label>
             <button type="button" id="close-help">Закрыть</button>
+        </div>
+    </div>
+
+    <div id="recording-overlay" hidden>
+        <div class="recording-card">
+            <p>идёт запись</p>
+            <div class="recording-dots" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <button type="button" id="overlay-stop">Стоп</button>
         </div>
     </div>
 

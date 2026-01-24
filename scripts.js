@@ -10,16 +10,18 @@ const cancelButton = document.getElementById("cancel-edit");
 const submitDefaultText = submitButton.textContent;
 let editIndex = null;
 const openTrashButton = document.getElementById("open-trash");
-        const mainView = document.getElementById("main-view");
-        const startRecordButton = document.getElementById("start-record");
-        const stopRecordButton = document.getElementById("stop-record");
-        const toast = document.getElementById("toast");
-        const helpModal = document.getElementById("help-modal");
-        const openHelpButton = document.getElementById("open-help");
-        const closeHelpButton = document.getElementById("close-help");
-        const trashModal = document.getElementById("trash-modal");
-        const closeTrashButton = document.getElementById("close-trash");
+const mainView = document.getElementById("main-view");
+const startRecordButton = document.getElementById("start-record");
+const toast = document.getElementById("toast");
+const helpModal = document.getElementById("help-modal");
+const openHelpButton = document.getElementById("open-help");
+const closeHelpButton = document.getElementById("close-help");
+const hideHelpCheckbox = document.getElementById("hide-help");
+const trashModal = document.getElementById("trash-modal");
+const closeTrashButton = document.getElementById("close-trash");
 const toggleThemeButton = document.getElementById("toggle-theme");
+const recordingOverlay = document.getElementById("recording-overlay");
+const overlayStopButton = document.getElementById("overlay-stop");
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = SpeechRecognition ? new SpeechRecognition() : null;
 let isRecording = false;
@@ -39,9 +41,9 @@ function saveItems(key, items) {
     localStorage.setItem(key, JSON.stringify(items));
 }
 
-        function renderMain(items) {
-            tbody.innerHTML = "";
-            if (items.length === 0) {
+function renderMain(items) {
+    tbody.innerHTML = "";
+    if (items.length === 0) {
         const row = document.createElement("tr");
         const cell = document.createElement("td");
         cell.colSpan = 3;
@@ -51,16 +53,16 @@ function saveItems(key, items) {
         return;
     }
 
-            items.forEach((item, index) => {
-                const row = document.createElement("tr");
-                const daysLeft = getDaysUntil(item.expiry);
-                if (daysLeft === 1) {
-                    row.classList.add("row-danger");
-                } else if (daysLeft === 3) {
-                    row.classList.add("row-warning");
-                }
-                const nameCell = document.createElement("td");
-                nameCell.textContent = item.name;
+    items.forEach((item, index) => {
+        const row = document.createElement("tr");
+        const daysLeft = getDaysUntil(item.expiry);
+        if (daysLeft === 1) {
+            row.classList.add("row-danger");
+        } else if (daysLeft === 3) {
+            row.classList.add("row-warning");
+        }
+        const nameCell = document.createElement("td");
+        nameCell.textContent = item.name;
         const expiryCell = document.createElement("td");
         expiryCell.textContent = formatDateForDisplay(item.expiry);
         const statusCell = document.createElement("td");
@@ -148,26 +150,26 @@ function startEdit(index) {
     nameInput.focus();
 }
 
-        function formatDateForInput(date) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, "0");
-            const day = String(date.getDate()).padStart(2, "0");
-            return `${year}-${month}-${day}`;
-        }
+function formatDateForInput(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+}
 
-        function getDaysUntil(value) {
-            const date = new Date(value);
-            if (Number.isNaN(date.getTime())) return null;
-            const today = new Date();
-            const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-            const dateMidnight = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-            const diffMs = dateMidnight - todayMidnight;
-            return Math.round(diffMs / 86400000);
-        }
+function getDaysUntil(value) {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return null;
+    const today = new Date();
+    const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const dateMidnight = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const diffMs = dateMidnight - todayMidnight;
+    return Math.round(diffMs / 86400000);
+}
 
-        function formatDateForDisplay(value) {
-            const date = new Date(value);
-            if (Number.isNaN(date.getTime())) {
+function formatDateForDisplay(value) {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
         return value;
     }
     const day = String(date.getDate()).padStart(2, "0");
@@ -310,11 +312,13 @@ function parseTranscript(text) {
     return null;
 }
 
-        function setRecordingState(active) {
-            isRecording = active;
-            startRecordButton.disabled = active;
-            stopRecordButton.disabled = !active;
-        }
+function setRecordingState(active) {
+    isRecording = active;
+    startRecordButton.disabled = active;
+    if (recordingOverlay) {
+        recordingOverlay.hidden = !active;
+    }
+}
 
 function showToast(message, type) {
     if (!toast) return;
@@ -361,18 +365,18 @@ form.addEventListener("submit", (event) => {
     if (!isDateNotPast(newItem.expiry)) {
         return;
     }
-            if (editIndex === null) {
-                items.push(newItem);
-            } else {
-                items[editIndex] = newItem;
-            }
-            saveItems(STORAGE_KEY, items);
-            renderMain(items);
-            showToast("Запись добавлена");
-            form.reset();
-            resetEdit();
-            nameInput.focus();
-        });
+    if (editIndex === null) {
+        items.push(newItem);
+    } else {
+        items[editIndex] = newItem;
+    }
+    saveItems(STORAGE_KEY, items);
+    renderMain(items);
+    showToast("Запись добавлена");
+    form.reset();
+    resetEdit();
+    nameInput.focus();
+});
 
 cancelButton.addEventListener("click", () => {
     form.reset();
@@ -455,32 +459,82 @@ if (openTrashButton && trashModal && closeTrashButton) {
 }
 
 if (openHelpButton && helpModal && closeHelpButton) {
+    const HELP_KEY = "hideHelp";
+
+    const applyHelpPreference = () => {
+        const hidden = localStorage.getItem(HELP_KEY) === "true";
+        if (hideHelpCheckbox) {
+            hideHelpCheckbox.checked = hidden;
+        }
+        if (!hidden) {
+            helpModal.hidden = false;
+        }
+    };
+
     openHelpButton.addEventListener("click", () => {
+        if (hideHelpCheckbox) {
+            hideHelpCheckbox.checked = localStorage.getItem(HELP_KEY) === "true";
+        }
         helpModal.hidden = false;
     });
 
     closeHelpButton.addEventListener("click", () => {
         helpModal.hidden = true;
+        if (hideHelpCheckbox) {
+            localStorage.setItem(HELP_KEY, hideHelpCheckbox.checked ? "true" : "false");
+        }
     });
 
     helpModal.addEventListener("click", (event) => {
         if (event.target === helpModal) {
             helpModal.hidden = true;
+            if (hideHelpCheckbox) {
+                localStorage.setItem(HELP_KEY, hideHelpCheckbox.checked ? "true" : "false");
+            }
         }
     });
 
     document.addEventListener("keydown", (event) => {
         if (event.key === "Escape") {
             helpModal.hidden = true;
+            if (hideHelpCheckbox) {
+                localStorage.setItem(HELP_KEY, hideHelpCheckbox.checked ? "true" : "false");
+            }
         }
     });
+
+    if (hideHelpCheckbox) {
+        hideHelpCheckbox.addEventListener("change", () => {
+            localStorage.setItem(HELP_KEY, hideHelpCheckbox.checked ? "true" : "false");
+        });
+    }
+
+    applyHelpPreference();
 }
 
 if (toggleThemeButton) {
     toggleThemeButton.addEventListener("click", () => {
         document.body.classList.toggle("theme-dark");
+        localStorage.setItem("theme", document.body.classList.contains("theme-dark") ? "dark" : "light");
     });
 }
+
+function initTheme() {
+    const stored = localStorage.getItem("theme");
+    if (stored === "dark") {
+        document.body.classList.add("theme-dark");
+        return;
+    }
+    if (stored === "light") {
+        document.body.classList.remove("theme-dark");
+        return;
+    }
+    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    document.body.classList.toggle("theme-dark", prefersDark);
+    localStorage.setItem("theme", prefersDark ? "dark" : "light");
+}
+
+initTheme();
 
 if (recognition) {
     recognition.lang = "ru-RU";
@@ -504,15 +558,15 @@ if (recognition) {
         if (!isDateNotPast(parsed.expiry)) {
             return;
         }
-                items.push({ name: parsed.name, expiry: parsed.expiry, status: "" });
-                saveItems(STORAGE_KEY, items);
-                renderMain(items);
-                showToast("Запись добавлена");
-            });
+        items.push({ name: parsed.name, expiry: parsed.expiry, status: "" });
+        saveItems(STORAGE_KEY, items);
+        renderMain(items);
+        showToast("Запись добавлена");
+    });
 
-            recognition.addEventListener("error", () => {
-                return;
-            });
+    recognition.addEventListener("error", () => {
+        return;
+    });
 
     recognition.addEventListener("end", () => {
         setRecordingState(false);
@@ -520,21 +574,45 @@ if (recognition) {
 }
 
 startRecordButton.addEventListener("click", () => {
-            if (!recognition) {
-                return;
-            }
+    if (!recognition) {
+        return;
+    }
     if (isRecording) {
         return;
     }
-            setRecordingState(true);
-            try {
-                recognition.start();
-            } catch (error) {
-                setRecordingState(false);
-            }
-        });
+    setRecordingState(true);
+    try {
+        recognition.start();
+    } catch (error) {
+        setRecordingState(false);
+    }
+});
 
-stopRecordButton.addEventListener("click", () => {
+if (overlayStopButton) {
+    overlayStopButton.addEventListener("click", () => {
+        if (!recognition || !isRecording) {
+            return;
+        }
+        recognition.stop();
+    });
+}
+
+if (recordingOverlay) {
+    recordingOverlay.addEventListener("click", (event) => {
+        if (event.target !== recordingOverlay) {
+            return;
+        }
+        if (!recognition || !isRecording) {
+            return;
+        }
+        recognition.stop();
+    });
+}
+
+document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") {
+        return;
+    }
     if (!recognition || !isRecording) {
         return;
     }
