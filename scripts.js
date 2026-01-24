@@ -64,7 +64,11 @@ function renderMain(items) {
         const nameCell = document.createElement("td");
         nameCell.textContent = item.name;
         const expiryCell = document.createElement("td");
-        expiryCell.textContent = formatDateForDisplay(item.expiry);
+        if (daysLeft !== null && daysLeft < 0) {
+            expiryCell.textContent = "Истёк";
+        } else {
+            expiryCell.textContent = formatDateForDisplay(item.expiry);
+        }
         const statusCell = document.createElement("td");
         const statusText = document.createElement("span");
         statusText.textContent = item.status || "";
@@ -112,7 +116,12 @@ function renderTrash(items) {
         const nameCell = document.createElement("td");
         nameCell.textContent = item.name;
         const expiryCell = document.createElement("td");
-        expiryCell.textContent = formatDateForDisplay(item.expiry);
+        const daysLeft = getDaysUntil(item.expiry);
+        if (daysLeft !== null && daysLeft < 0) {
+            expiryCell.textContent = "Истёк";
+        } else {
+            expiryCell.textContent = formatDateForDisplay(item.expiry);
+        }
         const statusCell = document.createElement("td");
         const statusText = document.createElement("span");
         statusText.textContent = item.status || "";
