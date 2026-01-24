@@ -19,6 +19,7 @@ const closeHelpButton = document.getElementById("close-help");
 const hideHelpCheckbox = document.getElementById("hide-help");
 const trashModal = document.getElementById("trash-modal");
 const closeTrashButton = document.getElementById("close-trash");
+const clearTrashButton = document.getElementById("clear-trash");
 const toggleThemeButton = document.getElementById("toggle-theme");
 const recordingOverlay = document.getElementById("recording-overlay");
 const overlayStopButton = document.getElementById("overlay-stop");
@@ -56,7 +57,9 @@ function renderMain(items) {
     items.forEach((item, index) => {
         const row = document.createElement("tr");
         const daysLeft = getDaysUntil(item.expiry);
-        if (daysLeft === 1) {
+        if (daysLeft !== null && daysLeft < 0) {
+            row.classList.add("row-expired");
+        } else if (daysLeft === 0 || daysLeft === 1) {
             row.classList.add("row-danger");
         } else if (daysLeft === 3) {
             row.classList.add("row-warning");
@@ -131,7 +134,15 @@ function renderTrash(items) {
         restoreButton.textContent = "Восстановить";
         restoreButton.dataset.action = "restore";
         restoreButton.dataset.index = String(index);
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.classList.add("icon-button");
+        deleteButton.innerHTML = "&#128465;";
+        deleteButton.title = "Удалить навсегда";
+        deleteButton.dataset.action = "delete-forever";
+        deleteButton.dataset.index = String(index);
         actions.appendChild(restoreButton);
+        actions.appendChild(deleteButton);
         statusCell.appendChild(statusText);
         statusCell.appendChild(document.createTextNode(" "));
         statusCell.appendChild(actions);
@@ -174,6 +185,16 @@ function getDaysUntil(value) {
     const dateMidnight = new Date(date.getFullYear(), date.getMonth(), date.getDate());
     const diffMs = dateMidnight - todayMidnight;
     return Math.round(diffMs / 86400000);
+}
+
+function sortItemsByExpiry(items) {
+    items.sort((first, second) => {
+        const firstDays = getDaysUntil(first.expiry);
+        const secondDays = getDaysUntil(second.expiry);
+        const firstKey = firstDays === null ? Number.MAX_SAFE_INTEGER : (firstDays < 0 ? -100000 + firstDays : firstDays);
+        const secondKey = secondDays === null ? Number.MAX_SAFE_INTEGER : (secondDays < 0 ? -100000 + secondDays : secondDays);
+        return firstKey - secondKey;
+    });
 }
 
 function formatDateForDisplay(value) {
@@ -357,6 +378,8 @@ function isDateNotPast(value) {
 
 const items = loadItems(STORAGE_KEY);
 const trashItems = loadItems(TRASH_KEY);
+sortItemsByExpiry(items);
+saveItems(STORAGE_KEY, items);
 renderMain(items);
 renderTrash(trashItems);
 setExpiryMinToday();
@@ -379,6 +402,7 @@ form.addEventListener("submit", (event) => {
     } else {
         items[editIndex] = newItem;
     }
+    sortItemsByExpiry(items);
     saveItems(STORAGE_KEY, items);
     renderMain(items);
     showToast("Запись добавлена");
@@ -432,17 +456,26 @@ trashBody.addEventListener("click", (event) => {
     }
     const action = target.dataset.action;
     const index = Number(target.dataset.index);
-    if (action !== "restore" || !Number.isInteger(index)) {
+    if (!Number.isInteger(index)) {
         return;
     }
-    const [restored] = trashItems.splice(index, 1);
-    if (restored) {
-        items.push(restored);
+    if (action === "restore") {
+        const [restored] = trashItems.splice(index, 1);
+        if (restored) {
+            items.push(restored);
+        }
+        sortItemsByExpiry(items);
+        saveItems(STORAGE_KEY, items);
+        saveItems(TRASH_KEY, trashItems);
+        renderMain(items);
+        renderTrash(trashItems);
+        return;
     }
-    saveItems(STORAGE_KEY, items);
-    saveItems(TRASH_KEY, trashItems);
-    renderMain(items);
-    renderTrash(trashItems);
+    if (action === "delete-forever") {
+        trashItems.splice(index, 1);
+        saveItems(TRASH_KEY, trashItems);
+        renderTrash(trashItems);
+    }
 });
 
 if (openTrashButton && trashModal && closeTrashButton) {
@@ -464,6 +497,21 @@ if (openTrashButton && trashModal && closeTrashButton) {
         if (event.key === "Escape") {
             trashModal.hidden = true;
         }
+    });
+}
+
+if (clearTrashButton) {
+    clearTrashButton.addEventListener("click", () => {
+        if (trashItems.length === 0) {
+            return;
+        }
+        const confirmed = window.confirm("Очистить корзину навсегда?");
+        if (!confirmed) {
+            return;
+        }
+        trashItems.splice(0, trashItems.length);
+        saveItems(TRASH_KEY, trashItems);
+        renderTrash(trashItems);
     });
 }
 
@@ -564,13 +612,14 @@ if (recognition) {
             showToast("Фраза не распознана", "error");
             return;
         }
-        if (!isDateNotPast(parsed.expiry)) {
-            return;
-        }
-        items.push({ name: parsed.name, expiry: parsed.expiry, status: "" });
-        saveItems(STORAGE_KEY, items);
-        renderMain(items);
-        showToast("Запись добавлена");
+    if (!isDateNotPast(parsed.expiry)) {
+        return;
+    }
+    items.push({ name: parsed.name, expiry: parsed.expiry, status: "" });
+    sortItemsByExpiry(items);
+    saveItems(STORAGE_KEY, items);
+    renderMain(items);
+    showToast("Запись добавлена");
     });
 
     recognition.addEventListener("error", () => {
