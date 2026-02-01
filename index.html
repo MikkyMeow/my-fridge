@@ -11,11 +11,17 @@
 
 </head>
 
-<body>
-    <nav>
-        <button type="button" id="toggle-theme" aria-label="Тёмная тема">&#127769;</button>
-        <button type="button" id="open-help" aria-haspopup="dialog" aria-controls="help-modal">?</button>
-        <button type="button" id="open-trash">Корзина</button>
+<body class="theme-dark">
+    <nav class="top-bar">
+        <div class="brand">
+            <div class="brand-icon" aria-hidden="true">🥕</div>
+            <h1>Мой холодильник</h1>
+        </div>
+        <div class="top-actions">
+            <button type="button" id="toggle-theme" class="ghost-button" aria-label="Тёмная тема">&#127769;</button>
+            <button type="button" id="open-help" class="ghost-button" aria-haspopup="dialog" aria-controls="help-modal">?</button>
+            <button type="button" id="open-trash" class="pill-button">Корзина</button>
+        </div>
     </nav>
 
     <section id="main-view">
@@ -33,11 +39,11 @@
         <form id="fridge-form">
             <label>
                 Название
-                <input type="text" id="name-input" required>
+                <input type="text" id="name-input" placeholder="Введите название продукта" required>
             </label>
             <label>
                 Срок годности
-                <input type="date" id="expiry-input" required>
+                <input type="date" id="expiry-input" placeholder="ДД.ММ.ГГГГ" required>
             </label>
             <button type="submit">Добавить</button>
             <button type="button" id="cancel-edit" hidden>Отменить</button>

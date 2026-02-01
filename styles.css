@@ -1,21 +1,23 @@
-﻿:root {
-    color-scheme: light;
-    --bg: #f4f1ea;
+:root {
+    color-scheme: light dark;
+    --bg: #f6f4f0;
     --panel: #ffffff;
-    --ink: #1f1c17;
-    --muted: #6b645a;
-    --accent: #d96b3b;
-    --accent-dark: #b24f28;
-    --line: #e3ddd3;
-    --shadow: 0 10px 30px rgba(31, 28, 23, 0.12);
+    --panel-soft: #f2f1ee;
+    --ink: #171717;
+    --muted: #6f6f6f;
+    --accent: #ff7a00;
+    --accent-dark: #e56f00;
+    --line: #e4e0d8;
+    --shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
     --radius: 18px;
-    --space: 2px;
-    --warn-bg: #fff3b5;
-    --warn-ink: #1f1c17;
-    --danger-bg: #f8c3b9;
-    --danger-ink: #1f1c17;
-    --expired-bg: #e08a7d;
-    --expired-ink: #1f1c17;
+    --space: 16px;
+    --page-bg: radial-gradient(circle at top left, #fff2de 0%, #f7f1e6 45%, #efe7da 100%);
+    --warn-bg: #fff0c8;
+    --warn-ink: #3c2a00;
+    --danger-bg: #ffd6c8;
+    --danger-ink: #3c0f00;
+    --expired-bg: #ffb3a6;
+    --expired-ink: #2b0900;
 }
 
 * {
@@ -23,66 +25,83 @@
 }
 
 body {
-    margin: 12px;
+    margin: 0;
     min-height: 100vh;
     font-family: "Manrope", "Segoe UI", sans-serif;
     color: var(--ink);
-    background: radial-gradient(circle at top left, #fff0dd 0%, #f4f1ea 45%, #ece6da 100%);
-    padding: var(--space);
+    background: var(--page-bg);
+    padding-bottom: 80px;
 }
 
 body.theme-dark {
-    --bg: #12100d;
-    --panel: #1f1b16;
-    --ink: #f1ede7;
-    --muted: #c5b8a6;
-    --accent: #e28a64;
-    --accent-dark: #c56a45;
-    --line: #3a3127;
-    --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-    --warn-bg: #f0d991;
-    --warn-ink: #1f1c17;
-    --danger-bg: #f1a89c;
-    --danger-ink: #1f1c17;
-    --expired-bg: #c86b5f;
-    --expired-ink: #1f1c17;
-    background: radial-gradient(circle at top left, #2a241d 0%, #14110e 55%, #0d0b08 100%);
+    --bg: #0d0d0d;
+    --panel: #141414;
+    --panel-soft: #1b1b1b;
+    --ink: #f5f5f5;
+    --muted: #b3b3b3;
+    --accent: #ff7a00;
+    --accent-dark: #e56f00;
+    --line: #2a2a2a;
+    --shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+    --page-bg: radial-gradient(circle at top left, rgba(255, 122, 0, 0.18) 0%, #121212 45%, #0a0a0a 100%);
+    --warn-bg: #231b0e;
+    --warn-ink: #ffd18a;
+    --danger-bg: #2b1712;
+    --danger-ink: #ffb09c;
+    --expired-bg: #3a1915;
+    --expired-ink: #ffb1a5;
 }
 
-nav {
+nav.top-bar {
     display: flex;
-    gap: var(--space);
+    align-items: center;
     justify-content: space-between;
-    max-width: 980px;
-    margin: 0 auto 12px;
-    padding: 0 8px;
+    padding: 18px 32px;
+    border-bottom: 1px solid var(--line);
 }
 
-#toggle-theme {
-    width: 28px;
-    height: 28px;
-    padding: 0;
-    border-radius: 50%;
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-#open-help {
-    width: 28px;
-    height: 28px;
-    padding: 0;
+.brand-icon {
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    margin-left: auto;
+    display: grid;
+    place-items: center;
+    background: var(--accent);
+    color: #141414;
+    font-size: 1.3rem;
+    box-shadow: 0 12px 24px rgba(255, 122, 0, 0.25);
+}
+
+.brand h1 {
+    margin: 0;
+    font-family: "Sora", "Segoe UI", sans-serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+.top-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 button {
-    border: 1px solid transparent;
+    border: none;
     border-radius: 999px;
-    padding: 4px 8px;
-    font-weight: 500;
+    padding: 8px 16px;
+    font-weight: 600;
     cursor: pointer;
     background: var(--accent);
-    color: #fff;
+    color: #141414;
     transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-    box-shadow: 0 8px 18px rgba(217, 107, 59, 0.25);
+    box-shadow: 0 10px 20px rgba(255, 122, 0, 0.25);
 }
 
 button:hover {
@@ -96,84 +115,129 @@ button:disabled {
     box-shadow: none;
 }
 
-#back-to-main {
-    background: #f0ede7;
+.ghost-button {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 50%;
+    background: transparent;
     color: var(--ink);
-    border-color: var(--line);
+    border: 1px solid var(--line);
     box-shadow: none;
 }
 
-section {
-    max-width: 980px;
-    margin: 0 auto;
+.ghost-button:hover {
+    background: rgba(255, 255, 255, 0.06);
 }
 
-#main-view {
-    background: var(--panel);
-    border-radius: var(--radius);
-    padding: 8px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--line);
+.pill-button {
+    padding: 8px 18px;
+}
+
+section {
+    max-width: 1100px;
+    margin: 26px auto 0;
+    padding: 0 24px;
 }
 
 #main-view {
     display: flex;
     flex-direction: column;
-    gap: var(--space);
+    gap: 24px;
+    background: transparent;
 }
 
 table {
     width: 100%;
-    border-collapse: collapse;
-    font-size: 0.98rem;
+    border-collapse: separate;
+    border-spacing: 0 14px;
+    font-size: 1rem;
 }
 
 thead th {
     text-align: left;
     font-family: "Sora", "Segoe UI", sans-serif;
     font-weight: 500;
-    font-size: 0.9rem;
-    letter-spacing: 0.03em;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    padding: var(--space);
-    border-bottom: 2px solid var(--line);
+    color: var(--muted);
+    padding: 0 20px 6px;
 }
 
 tbody td {
-    padding: var(--space);
+    padding: 18px 20px;
+    background: var(--panel);
+    border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
-    vertical-align: top;
+    vertical-align: middle;
 }
 
-tbody tr:last-child td {
-    border-bottom: none;
+tbody td:first-child {
+    border-left: 1px solid var(--line);
+    border-radius: 14px 0 0 14px;
+    font-weight: 600;
+}
+
+tbody td:last-child {
+    border-right: 1px solid var(--line);
+    border-radius: 0 14px 14px 0;
+}
+
+#fridge-table tbody td:last-child,
+#trash-table tbody td:last-child {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+#fridge-table tbody td:last-child > span:first-child,
+#trash-table tbody td:last-child > span:first-child {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+#fridge-table tbody td:last-child span:last-child,
+#trash-table tbody td:last-child span:last-child {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .row-warning td {
     background: var(--warn-bg);
     color: var(--warn-ink);
+    border-color: rgba(0, 0, 0, 0.15);
 }
 
 .row-danger td {
     background: var(--danger-bg);
     color: var(--danger-ink);
+    border-color: rgba(0, 0, 0, 0.15);
 }
 
 .row-expired td {
     background: var(--expired-bg);
     color: var(--expired-ink);
+    border-color: rgba(0, 0, 0, 0.2);
 }
 
 #fridge-form {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
     align-items: end;
+    background: var(--panel);
+    border-radius: 16px;
+    padding: 22px;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
 }
 
 #fridge-form label {
     display: grid;
-    gap: var(--space);
+    gap: 8px;
     font-weight: 500;
     color: var(--muted);
     font-size: 0.95rem;
@@ -182,63 +246,79 @@ tbody tr:last-child td {
 #fridge-form input {
     border: 1px solid var(--line);
     border-radius: 12px;
-    padding: var(--space);
+    padding: 10px 12px;
     font-size: 1rem;
+    background: var(--panel-soft);
+    color: var(--ink);
+}
+
+#fridge-form input::placeholder {
+    color: #8c8c8c;
 }
 
 #fridge-form button {
     justify-self: start;
 }
 
-#fridge-table tbody td:last-child,
-#trash-table tbody td:last-child {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space);
-    align-items: center;
-}
-
-#fridge-table tbody td:last-child span,
-#trash-table tbody td:last-child span {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space);
-}
-
-#fridge-table tbody button,
-#trash-table tbody button {
-    padding: var(--space);
-    font-size: 0.85rem;
+#cancel-edit {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink);
     box-shadow: none;
 }
 
+#cancel-edit:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
 .icon-button {
-    width: 28px;
-    height: 28px;
+    width: 36px;
+    height: 36px;
     padding: 0;
     border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     line-height: 1;
+    font-size: 0.95rem;
+    box-shadow: none;
+}
+
+#fridge-table tbody button[data-action="edit"] {
+    background: var(--accent);
+    color: #1b1b1b;
+}
+
+#fridge-table tbody button[data-action="delete"] {
+    background: #2d74ff;
+    color: #fff;
 }
 
 #trash-table tbody button {
     background: #2f6f6d;
+    color: #fff;
 }
 
 #trash-table tbody button:hover {
     background: #255554;
 }
 
+#trash-table tbody button[data-action="delete-forever"] {
+    background: #c24c3a;
+}
+
+#trash-table tbody button[data-action="delete-forever"]:hover {
+    background: #a84032;
+}
+
 #voice-controls {
-    background: #f7f1e8;
+    background: var(--panel);
     border: 1px dashed var(--line);
     border-radius: 16px;
-    padding: var(--space);
+    padding: 16px 22px;
     display: flex;
     flex-direction: column;
-    gap: var(--space);
+    gap: 10px;
 }
 
 #voice-controls p {
@@ -250,17 +330,17 @@ tbody tr:last-child td {
 #voice-controls .record-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space);
+    gap: 10px;
 }
 
 #toast {
     position: fixed;
     left: 50%;
-    bottom: 8px;
+    bottom: 18px;
     transform: translateX(-50%);
     background: #2f8a46;
     color: #fff;
-    padding: 6px 12px;
+    padding: 8px 14px;
     border-radius: 999px;
     font-size: 0.9rem;
     box-shadow: 0 8px 18px rgba(47, 138, 70, 0.3);
@@ -279,25 +359,28 @@ tbody tr:last-child td {
     transform: translateX(-50%) translateY(-2px);
 }
 
-#trash-modal {
+#trash-modal,
+#help-modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.35);
+    background: rgba(0, 0, 0, 0.45);
     display: grid;
     place-items: center;
     z-index: 20;
 }
 
-#trash-modal[hidden] {
+#trash-modal[hidden],
+#help-modal[hidden] {
     display: none;
 }
 
-.trash-content {
+.trash-content,
+.help-content {
     background: var(--panel);
     color: var(--ink);
     border-radius: 12px;
-    padding: 12px;
-    width: min(92vw, 520px);
+    padding: 18px;
+    width: min(92vw, 540px);
     border: 1px solid var(--line);
     box-shadow: var(--shadow);
 }
@@ -306,33 +389,51 @@ tbody tr:last-child td {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space);
-    margin-bottom: var(--space);
+    gap: 12px;
+    margin-bottom: 16px;
 }
 
 .trash-actions {
     display: inline-flex;
-    gap: var(--space);
+    gap: 8px;
 }
 
-.trash-header h2 {
+.trash-header h2,
+.help-content h2 {
     margin: 0;
     font-family: "Sora", "Segoe UI", sans-serif;
     font-size: 1rem;
     font-weight: 500;
 }
 
-#help-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.35);
-    display: grid;
-    place-items: center;
-    z-index: 20;
+.help-content {
+    width: min(90vw, 420px);
 }
 
-#help-modal[hidden] {
-    display: none;
+.help-content ol {
+    margin: 0 0 12px;
+    padding-left: 18px;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.help-patterns {
+    display: grid;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+.help-patterns span {
+    display: block;
+}
+
+.help-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 8px;
 }
 
 #recording-overlay {
@@ -352,7 +453,7 @@ tbody tr:last-child td {
     background: var(--panel);
     color: var(--ink);
     border-radius: 14px;
-    padding: 12px 16px;
+    padding: 14px 18px;
     border: 1px solid var(--line);
     box-shadow: var(--shadow);
     text-align: center;
@@ -407,10 +508,10 @@ tbody tr:last-child td {
 
 .mic-button {
     position: fixed;
-    right: 12px;
-    bottom: 12px;
-    width: 56px;
-    height: 56px;
+    right: 16px;
+    bottom: 16px;
+    width: 58px;
+    height: 58px;
     padding: 0;
     border-radius: 50%;
     font-size: 1.4rem;
@@ -421,52 +522,59 @@ tbody tr:last-child td {
 @keyframes mic-glow {
     0%,
     100% {
-        box-shadow: 0 0 0 rgba(217, 107, 59, 0.35);
+        box-shadow: 0 0 0 rgba(255, 122, 0, 0.35);
     }
     50% {
-        box-shadow: 0 0 0 10px rgba(217, 107, 59, 0.15);
+        box-shadow: 0 0 0 10px rgba(255, 122, 0, 0.15);
     }
 }
 
-.help-content {
-    background: var(--panel);
-    color: var(--ink);
-    border-radius: 12px;
-    padding: 12px;
-    width: min(90vw, 380px);
-    border: 1px solid var(--line);
-    box-shadow: var(--shadow);
+@media (max-width: 900px) {
+    nav.top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 16px 20px;
+    }
+
+    .top-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    #fridge-form {
+        grid-template-columns: 1fr;
+    }
 }
 
-.help-content h2 {
-    margin: 0 0 8px;
-    font-family: "Sora", "Segoe UI", sans-serif;
-    font-size: 1rem;
-    font-weight: 500;
-}
+@media (max-width: 600px) {
+    section {
+        padding: 0 16px;
+    }
 
-.help-content ol {
-    margin: 0 0 12px;
-    padding-left: 18px;
-    color: var(--muted);
-    font-size: 0.9rem;
-}
+    thead {
+        display: none;
+    }
 
-.help-patterns {
-    display: grid;
-    gap: 4px;
-    margin-top: 4px;
-}
+    tbody td {
+        border-radius: 0;
+    }
 
-.help-patterns span {
-    display: block;
-}
+    tbody tr {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
 
-.help-checkbox {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.85rem;
-    color: var(--muted);
-    margin-bottom: 8px;
+    tbody td:first-child {
+        border-radius: 14px 14px 0 0;
+    }
+
+    tbody td:last-child {
+        border-radius: 0 0 14px 14px;
+    }
+
+    #fridge-table tbody td:last-child,
+    #trash-table tbody td:last-child {
+        justify-content: space-between;
+    }
 }

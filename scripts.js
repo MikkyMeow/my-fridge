@@ -586,6 +586,10 @@ function initTheme() {
         document.body.classList.remove("theme-dark");
         return;
     }
+    if (document.body.classList.contains("theme-dark")) {
+        localStorage.setItem("theme", "dark");
+        return;
+    }
     const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
     document.body.classList.toggle("theme-dark", prefersDark);
     localStorage.setItem("theme", prefersDark ? "dark" : "light");
